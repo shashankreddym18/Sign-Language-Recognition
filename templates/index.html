@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}" />
+    <title>Hand Tracking</title>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h1>Sign Language Detection</h1>
+      </div>
+    <div class="videoDiv">
+      <img src="{{ url_for('video_feed') }}" alt="Hand Tracking" />
+
+      <div class="resultDiv">
+          <h2>Prediction:</h2>
+          <p id="predicted_letters"></p>
+      </div>
+    </div>
+
+
+
+    <div class="resultDiv">
+      <h2>Text:</h2>
+      <p id="predicted_label"></p>
+    </div>
+  </div>
+    <script>
+      async function updateLabel() {
+        const response = await fetch("/get_label");
+        const data = await response.json();
+
+        document.getElementById("predicted_letters").innerText = data.label;
+
+        const existingLabels =
+          document.getElementById("predicted_label").innerText;
+
+        document.getElementById("predicted_label").innerText =
+          existingLabels + " " + data.label;
+      }
+
+      setInterval(updateLabel, 2500); // Update label every second
+    </script>
+  </body>
+</html>
