@@ -96,8 +96,15 @@ def generate_frames():
 
 @app.route('/')
 def index():
+    return render_template('home.html')
+
+@app.route('/communicate')
+def communicate():
     return render_template('index.html')
 
+@app.route('/learn')
+def learn():
+    return render_template('learn.html')
 @app.route('/video_feed')
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')

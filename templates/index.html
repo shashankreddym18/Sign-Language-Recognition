@@ -3,45 +3,144 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}" />
-    <title>Hand Tracking</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}" />
+    <title>Sign Language Detection</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100vh;
+      }
+
+      .left-section {
+        flex: 1;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .right-section {
+        flex: 1;
+        padding: 20px;
+        background-color: #dfe6e9;
+        overflow-y: auto; /* Enable scrolling for long text */
+        white-space: pre-wrap; /* Preserve line breaks */
+        position: relative;
+      }
+
+      .videoDiv img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+      }
+
+      .resultDiv {
+        margin-top: 20px;
+      }
+
+      .resultDiv h2 {
+        margin-bottom: 10px;
+      }
+
+      .resultDiv p {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .clear-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .clear-btn:hover {
+        background-color: #ff4c4c;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <div>
-        <h1>Sign Language Detection</h1>
-      </div>
-    <div class="videoDiv">
-      <img src="{{ url_for('video_feed') }}" alt="Hand Tracking" />
-
-      <div class="resultDiv">
-          <h2>Prediction:</h2>
+      <!-- Left Section: Video feed and live prediction -->
+      <div class="left-section">
+        <div class="heading_div">        
+          <h1>Sign Language Recognition</h1>
+        </div>
+        <div class="videoDiv">
+          <img src="{{ url_for('video_feed') }}" alt="Hand Tracking" />
+        </div>
+        <div class="resultDiv">
+          <h2>Live Prediction:</h2>
           <p id="predicted_letters"></p>
+        </div>
+      </div>
+
+      <!-- Right Section: History of predictions -->
+      <div class="right-section">
+        <h2>Prediction History:</h2>
+        <button class="clear-btn" onclick="clearHistory()">Clear</button>
+        <p id="predicted_label"></p>
       </div>
     </div>
-
-
-
-    <div class="resultDiv">
-      <h2>Text:</h2>
-      <p id="predicted_label"></p>
-    </div>
-  </div>
     <script>
+      let lastSpoken = ""; // Variable to keep track of the last spoken character
+
       async function updateLabel() {
         const response = await fetch("/get_label");
         const data = await response.json();
 
-        document.getElementById("predicted_letters").innerText = data.label;
+        // Update current prediction
+        const livePrediction = data.label;
+        document.getElementById("predicted_letters").innerText = livePrediction;
 
-        const existingLabels =
-          document.getElementById("predicted_label").innerText;
+        // Speak the live prediction if it's different from the last spoken character
+        if (livePrediction !== lastSpoken && livePrediction.trim() !== "") {
+          speak(livePrediction);
+          lastSpoken = livePrediction; // Update the last spoken character
+        }
 
-        document.getElementById("predicted_label").innerText =
-          existingLabels + " " + data.label;
+        // Update history of predictions
+        document.getElementById("predicted_label").innerHTML = data.all_labels;
       }
 
-      setInterval(updateLabel, 2500); // Update label every second
+      // Function to convert text to speech
+      function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US"; // Set the language
+        speechSynthesis.speak(utterance);
+      }
+
+      // Function to handle Enter key press for adding a new line
+      document.addEventListener("keydown", async function (event) {
+        if (event.key === "Enter") {
+          // Add a new line by making a POST request to the backend
+          const response = await fetch("/add_new_line", { method: "POST" });
+          const data = await response.json();
+
+          // Update the predicted text history with a new line
+          document.getElementById("predicted_label").innerHTML = data.all_labels;
+        }
+      });
+
+      // Function to clear the prediction history
+      async function clearHistory() {
+        const response = await fetch("/clear_history", { method: "POST" });
+        const data = await response.json();
+
+        // Clear the predicted text history
+        document.getElementById("predicted_label").innerHTML = data.all_labels;
+      }
+
+      // Periodically update the label
+      setInterval(updateLabel, 2500); // Update every 2.5 seconds
     </script>
   </body>
 </html>

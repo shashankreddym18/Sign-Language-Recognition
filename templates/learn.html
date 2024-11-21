@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Sign Language</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/learn.css')}}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Learn Sign Language</h1>
+      <p class="intro-text">
+        Explore the sign language alphabet and basic phrases with this guide:
+      </p>
+
+      <div class="image-container">
+        <img
+          src="{{ url_for('static', filename='images/ASL_Alphabet.jpg') }}"
+          alt="Sign Language Guide"
+        />
+      </div>
+    </div>
+  </body>
+</html>

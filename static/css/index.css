@@ -46,3 +46,19 @@ h1 {
   font-weight: 800;
   font-size: 25px;
 }
+
+#predicted_label{
+  font-size: 20px;
+}
+
+#predicted_letters{
+  font-size: 20px;
+
+
+}
+
+.heading_div{
+  display: flex;
+  align-items: center;
+  justify-self: center;
+}

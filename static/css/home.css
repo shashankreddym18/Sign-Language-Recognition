@@ -1,0 +1,123 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* background: linear-gradient(135deg, #f0f8ff 0%, #d9eaf7 100%); */
+  background-color: #E3F1FF;
+  /* background: linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%); */
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* Header Styling */
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  /* color: #ffffff;
+  color:gray; */
+  color: #133E87;
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 40px;
+  animation: fadeInDown 1s ease-in-out;
+}
+
+/* Container Styling */
+.container {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 600px;
+  /* background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%); */
+
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+  animation: fadeInUp 1.2s ease-in-out forwards;
+}
+
+/* Button Container Styling */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Button Styling */
+.button {
+  display: inline-block;
+  padding: 15px 35px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #16222A 0%, #3A6073 100%);
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 15px rgba(0, 114, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.button:hover {
+  transform: translateY(-5px) scale(1.05);
+  background: linear-gradient(135deg, #3A6073 0%, #16222A 100%);
+  box-shadow: 0 12px 20px rgba(0, 114, 255, 0.6);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3),
+    transparent 40%
+  );
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s ease;
+}
+
+.button:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
